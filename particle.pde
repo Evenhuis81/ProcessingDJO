@@ -1,17 +1,23 @@
 class Particle {
     PVector pos, vel, acc;
-    color colour = color(255);
+    color strokeC = color(255);
     int size = 10;
 
-    Particle(float x, float y) {
-        pos = new PVector(x, y);
+    Particle() { // default constructor
+        pos = new PVector(); // no values = x: 0, y: 0
         vel = new PVector();
         acc = new PVector();
+
+        println("Particle created");
     }
 
     void applyForce(PVector force) {
-        // F = M * A (force = mass * acceleration) Mass ommited for now
+        // F = M * A (force = mass * acceleration), mass ommited
         acc.add(force);
+    }
+
+    void removeForce(PVector force) {
+        acc.sub(force);
     }
 
     void update() {
@@ -20,7 +26,7 @@ class Particle {
     }
 
     void show() {
-        stroke(colour);
+        stroke(strokeC);
         strokeWeight(size);
         point(pos.x, pos.y);
     }

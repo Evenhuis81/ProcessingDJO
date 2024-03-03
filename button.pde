@@ -16,6 +16,7 @@ class Button {
         strokeC = 255;
         textSize(s);
         textDesc = 0.6 * textDescent();
+        pressed = false;
     }
 
     Button(String buttonText, int x, int y) {
@@ -39,14 +40,6 @@ class Button {
         pressed = false;
     }
 
-    void pressedInOut() {
-        fillC = 0;
-    }
-
-    void pressedOutIn() {
-        fillC = 100;
-    }
-
     void show() {
         stroke(strokeC);
         strokeWeight(2);
@@ -60,7 +53,7 @@ class Button {
 
         strokeWeight(1);
 
-        // next line is to check middle of text for vertical alignment
+        // line to check middle of text for vertical alignment
         // line(x, y + h/2, x + w, y + h/2);
     }
 }

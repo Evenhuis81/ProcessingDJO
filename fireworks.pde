@@ -1,46 +1,32 @@
 ArrayList<Particle> particleList = new ArrayList<Particle>();
-boolean phaseRunning = false;
-
-int backgroundColor = 0;
-Button button;
-int launchX;
-int launchXCorrection = 10;
+ArrayList<Particle> toRemove = new ArrayList<Particle>();
+ArrayList<Particle> toAdd = new ArrayList<Particle>();
+LaunchPad launchPad;
+Button startButton;
+int bkgrdC = 0;
 
 void setup() {
     size(800, 600);
-    button = new Button("start", width-120, 20);
-
-    launchX = width - 10;
+    startButton = new Button("start", width-120, 20);
+    launchPad = new LaunchPad();
 }
-
-int counter = 0;
 
 void draw() {
-    background(backgroundColor);
+    background(bkgrdC);
 
-    updates();
-    shows();
-
-    if (phaseRunning) {
-        counter++;
-
-        if (counter % 2 == 0) {
-            launcher();
-            println(launchX);
-        }
-    }
-}
-
-void updates () {
+    // for (int i = 0; i < particleList.size(); i++)
     for (Particle p : particleList) {
         p.update();
-    }
-}
-
-void shows() {
-    button.show();
-
-    for (Particle p : particleList) {
         p.show();
     }
+
+    particleList.removeAll(toRemove);
+    particleList.addAll(toAdd);
+
+    toRemove.clear();
+    toAdd.clear();
+
+
+
+    startButton.show();
 }
