@@ -51,9 +51,8 @@ class Button {
         fill(255);
         text(txt, x + w/2, y + h/2 - textDesc);
 
-        strokeWeight(1);
-
         // line to check middle of text for vertical alignment
+        // strokeWeight(1);
         // line(x, y + h/2, x + w, y + h/2);
     }
 }

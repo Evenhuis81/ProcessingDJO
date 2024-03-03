@@ -7,8 +7,6 @@ class Particle {
         pos = new PVector(); // no values = x: 0, y: 0
         vel = new PVector();
         acc = new PVector();
-
-        println("Particle created");
     }
 
     void applyForce(PVector force) {
