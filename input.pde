@@ -4,7 +4,7 @@ void mousePressed() {
 
 void mouseReleased() {
     if (startButton.pressed) {
-        if (startButton.inside()) launchPad.start();
+        if (startButton.inside()) launchPad.ignite();
 
         startButton.release();
     }

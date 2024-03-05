@@ -40,3 +40,15 @@ void draw() {
     statistics.setText(0, "Particles length: " + particleList.size());
     statistics.show();
 }
+
+
+X x, x2;
+
+x = new X();
+x2 = new X();
+
+println(x);
+
+class X {
+    float x = 20;
+}
