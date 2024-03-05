@@ -1,11 +1,12 @@
 void mousePressed() {
-    if (startButton.inside()) startButton.press();
+    // if (startButton.inside()) startButton.press();
 }
 
 void mouseReleased() {
-    if (startButton.pressed) {
-        if (startButton.inside()) launchPad.ignite();
+    launchPad.ignite();
+    // if (startButton.pressed) {
+    //     if (startButton.inside()) launchPad.ignite();
 
-        startButton.release();
-    }
+    //     startButton.release();
+    // }
 }

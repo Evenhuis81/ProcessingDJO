@@ -1,10 +1,10 @@
 class Particle {
     PVector pos, vel, acc;
-    color strokeC = color(255);
-    int size = 10;
+    color strokeC = color(255, 255, 255, 255);
+    int size = 8;
 
     Particle() { // default constructor
-        pos = new PVector(); // no values = x: 0, y: 0
+        pos = new PVector(); // no values = { x: 0, y: 0 }
         vel = new PVector();
         acc = new PVector();
     }

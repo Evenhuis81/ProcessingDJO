@@ -1,28 +1,19 @@
-// import java.util.Arrays;
 import java.util.Arrays;
 
 ArrayList<Particle> particleList = new ArrayList<Particle>();
 ArrayList<Particle> toRemove = new ArrayList<Particle>();
 ArrayList<Particle> toAdd = new ArrayList<Particle>();
 Statistics statistics = new Statistics();
-LaunchPad launchPad;
-Button startButton;
-int bkgrdC = color(0);
+LaunchPad launchPad = new LaunchPad();
+// Button startButton;
 
 void setup() {
     size(800, 600);
-    startButton = new Button("start", width-120, 20);
-    launchPad = new LaunchPad();
-
-    statistics.addText(0, "Particles length: " + particleList.size());
-    statistics.addText(1, "xCor: ");
-    statistics.addText(2, "startX: ");
-    statistics.addText(3, "minX: ");
-    statistics.addText(4, "maxX: ");
+    // startButton = new Button("start", width-120, 20);
 }
 
 void draw() {
-    background(bkgrdC);
+    background(0);
 
     for (Particle p : particleList) {
         p.update();
@@ -35,20 +26,8 @@ void draw() {
     toRemove.clear();
     toAdd.clear();
 
-    startButton.show();
+    // startButton.show();
 
-    statistics.setText(0, "Particles length: " + particleList.size());
+    statistics.update();
     statistics.show();
-}
-
-
-X x, x2;
-
-x = new X();
-x2 = new X();
-
-println(x);
-
-class X {
-    float x = 20;
 }

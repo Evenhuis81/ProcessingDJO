@@ -2,7 +2,11 @@ class Statistics {
     ArrayList<String> stats = new ArrayList<String>();
 
     Statistics() {
-        println("Statistics created");
+        addText(0, "Particles length: ");
+        // addText(1, "xCor: ");
+        // addText(2, "startX: ");
+        // addText(3, "minX: ");
+        // addText(4, "maxX: ");
     }
 
     void addText(int i, String txt) {
@@ -11,6 +15,14 @@ class Statistics {
 
     void setText(int i, String txt) {
         stats.set(i, txt);
+    }
+
+    void update() {
+        setText(0, "Particles length: " + particleList.size());
+        // setText(1, "xCor: " + xCorrection);
+        // setText(2, "startX: " + startX);
+        // setText(3, "minX: " + minX);
+        // setText(4, "maxX: " + maxX);
     }
 
     void show() {
