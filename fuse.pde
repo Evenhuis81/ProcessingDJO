@@ -1,16 +1,23 @@
 class Fuse extends Particle {
     ArrayList<PVector> history = new ArrayList<PVector>();
-    int historyLength = 20;
+    int historyLength;
+    color fuseStrokeC = color(255, 255);
 
     Fuse(float x) {
         pos.set(x, height + size / 2);
         applyForce(new PVector(0, 0.015)); // gravity
         vel.y = random(-4, -3); // launch speed
+        historyLength = (int) random(15, 30);
     }
 
     void update() {
         history.add(pos.copy());
+
+        // println(history.size());
+
         if (history.size() > historyLength) history.remove(0);
+
+        // println(history.size());
 
         super.update();
 
@@ -23,9 +30,16 @@ class Fuse extends Particle {
     void show() {
         super.show();
 
-        for (PVector h : history) {
+        for (int i = history.size(); i > 0; i--) {
+            PVector hPos = history.get(i-1);
             
-            point(h.x, h.y);
+            float alpha = (float) i / history.size() * 255;
+
+            fuseStrokeC = color(255, alpha);
+
+            stroke(fuseStrokeC);
+
+            point(hPos.x, hPos.y);
         }
     }
 
