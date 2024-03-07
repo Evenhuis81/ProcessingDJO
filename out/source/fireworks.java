@@ -28,15 +28,7 @@ LaunchPad launchPad = new LaunchPad();
 
 public void setup() {
     /* size commented out by preprocessor */;
-
     // startButton = new Button("start", width-120, 20);
-
-    // println(5/20*255);
-
-    float iT = 5;
-    int iS = 20;
-
-    println(iT / iS);
 }
 
 public void draw() {
@@ -116,33 +108,40 @@ class Button {
         // line(x, y + h/2, x + w, y + h/2);
     }
 }
-class Fuse extends Particle {
+class Fuse2 extends Particle {
     ArrayList<PVector> history = new ArrayList<PVector>();
-    int historyLength;
-    int fuseC = color(255, 255);
+    int historyLength, red, green, blue, alpha, count;
+    int fuseStrokeC;
+    float angle;
 
-    Fuse(float x) {
-        pos.set(x, height + size / 2);
-        applyForce(new PVector(0, 0.015f)); // gravity
-        vel.y = random(-4, -3); // launch speed
+    Fuse2(float angle) {
+        count = 0;
+        pos.set(width/2, height + size / 2);
+        applyForce(new PVector(0, 0.022f)); // gravity
+        // vel.y = random(-4, -3); // launch speed
+        this.angle = angle;
+        vel = PVector.fromAngle(angle).mult(5);
         historyLength = (int) random(15, 30);
+        red = (int) random(256);
+        green = (int) random(256);
+        blue = (int) random(256);
+        strokeC = color(red, green, blue);
     }
 
     public void update() {
         history.add(pos.copy());
 
-        // println(history.size());
-
         if (history.size() > historyLength) history.remove(0);
-
-        // println(history.size());
 
         super.update();
 
-        if (vel.y > 0) {
+        // if (vel.y > 0) {
+            if (count > 90) {
             toRemove.add(this);
-            explode(30);
+            explode(60);
         }
+
+        count++;
     }
 
     public void show() {
@@ -151,15 +150,11 @@ class Fuse extends Particle {
         for (int i = history.size(); i > 0; i--) {
             PVector hPos = history.get(i-1);
             
-            // float alpha = history.size() - 1 == 0 ? 255 : (i / (history.size() - 1)) * 255;
-            float iTemp = i;
-
             float alpha = (float) i / history.size() * 255;
 
-            fuseC = color(255, alpha);
+            fuseStrokeC = color(red, green, blue, alpha);
 
-            stroke(fuseC);
-
+            stroke(fuseStrokeC);
             point(hPos.x, hPos.y);
         }
     }
@@ -175,6 +170,60 @@ class Fuse extends Particle {
     }
 }
 
+class Fuse extends Particle {
+    ArrayList<PVector> history = new ArrayList<PVector>();
+    int historyLength, red, green, blue, alpha;
+    int fuseStrokeC;
+
+    Fuse(float x) {
+        pos.set(x, height + size / 2);
+        applyForce(new PVector(0, 0.015f)); // gravity
+        vel.y = random(-4, -3); // launch speed
+        historyLength = (int) random(15, 30);
+        red = (int) random(256);
+        green = (int) random(256);
+        blue = (int) random(256);
+        strokeC = color(red, green, blue);
+    }
+
+    public void update() {
+        history.add(pos.copy());
+
+        if (history.size() > historyLength) history.remove(0);
+
+        super.update();
+
+        if (vel.y > 0) {
+            toRemove.add(this);
+            explode(30);
+        }
+    }
+
+    public void show() {
+        super.show();
+
+        for (int i = history.size(); i > 0; i--) {
+            PVector hPos = history.get(i-1);
+            
+            float alpha = (float) i / history.size() * 255;
+
+            fuseStrokeC = color(red, green, blue, alpha);
+
+            stroke(fuseStrokeC);
+            point(hPos.x, hPos.y);
+        }
+    }
+
+    public void explode(int amount) {
+        Particle[] sparks = new Particle[amount];
+
+        for (int i = 0; i < sparks.length; i++) {
+            sparks[i] = new Spark(pos);
+        }
+        
+        toAdd.addAll(Arrays.asList(sparks));
+    }
+}
 
 // class Fuse2 extends Particle {
 //     float startX, speed, minX, maxX, xCorrection; // xCorrection = amount of repositioning on x-axis for new launch
@@ -230,6 +279,10 @@ public void mouseReleased() {
     //     startButton.release();
     // }
 }
+float angleAdjust = 0.05f;
+float angleFactor = 1.25f; // 225 degrees, range = 1.25 - 1.75 ()
+float angl = (float) Math.PI * angleFactor; // 
+
 class LaunchPad {
     boolean active = false;
 
@@ -238,7 +291,12 @@ class LaunchPad {
     public void ignite() {
         active = true;
 
-        particleList.add(new Fuse(mouseX));
+        particleList.add(new Fuse2(angl));
+
+        angleFactor += angleAdjust;
+        angl = (float) Math.PI * angleFactor;
+
+        if (angleFactor > 1.70f || angleFactor < 1.30f) angleAdjust *= -1;
     }
 }
 class Particle {
@@ -284,6 +342,7 @@ class Spark extends Particle {
         green = (int) random(256);
         blue = (int) random(256);
         applyForce(new PVector(0.01f, 0.05f));
+        vel.y -= 1;
         strokeC = color(red, green , blue, opacity);
     }
 

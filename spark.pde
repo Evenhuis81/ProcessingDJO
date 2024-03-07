@@ -10,6 +10,7 @@ class Spark extends Particle {
         green = (int) random(256);
         blue = (int) random(256);
         applyForce(new PVector(0.01, 0.05));
+        vel.y -= 1;
         strokeC = color(red, green , blue, opacity);
     }
 

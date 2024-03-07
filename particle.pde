@@ -1,9 +1,6 @@
 class Particle {
     PVector pos, vel, acc;
     color strokeC = color(255);
-    // red = random(256);
-    // green = random(256);
-    // blue = random(256);
     int size = 8;
 
     Particle() { // default constructor
