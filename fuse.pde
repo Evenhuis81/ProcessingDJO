@@ -1,119 +1,58 @@
-class Fuse2 extends Particle {
-    ArrayList<PVector> history = new ArrayList<PVector>();
-    int historyLength, red, green, blue, alpha, count;
-    color fuseStrokeC;
-    float angle;
+class Fuse {
+    int count = 0;
+    boolean exploded = false;
 
-    Fuse2(float angle) {
-        count = 0;
-        pos.set(width/2, height + size / 2);
-        applyForce(new PVector(0, 0.022)); // gravity
-        // vel.y = random(-4, -3); // launch speed
-        this.angle = angle;
-        vel = PVector.fromAngle(angle).mult(5);
-        historyLength = (int) random(15, 30);
-        red = (int) random(256);
-        green = (int) random(256);
-        blue = (int) random(256);
-        strokeC = color(red, green, blue);
+    Fuse(float x, float y, float angle, int radius) {
+        ParticleWithTrail fuse = new ParticleWithTrail(random(15, 30));
+        fuse.pos.set(x, y);
+        fuse.applyForce(new PVector(0, 0.022)); // gravity
+        fuse.vel = PVector.fromAngle(angle).mult(5); // launch direction + speed
+        particleList.add(fuse);
     }
 
     void update() {
-        history.add(pos.copy());
-
-        if (history.size() > historyLength) history.remove(0);
-
         super.update();
 
-        // if (vel.y > 0) {
-            if (count > 90) {
-            toRemove.add(this);
-            explode(60);
-        }
+        if (count > 90 && !exploded) explode(30);
 
         count++;
     }
 
-    void show() {
-        super.show();
-
-        for (int i = history.size(); i > 0; i--) {
-            PVector hPos = history.get(i-1);
-            
-            float alpha = (float) i / history.size() * 255;
-
-            fuseStrokeC = color(red, green, blue, alpha);
-
-            stroke(fuseStrokeC);
-            point(hPos.x, hPos.y);
-        }
-    }
+    // void show() {
+    //     if (!exploded) super.show();
+    // }
 
     void explode(int amount) {
-        Particle[] sparks = new Particle[amount];
+        Particle[] particles = new Particle[amount];
 
-        for (int i = 0; i < sparks.length; i++) {
-            sparks[i] = new Spark(pos);
+        for (int i = 0; i < particles.length; i++) {
+            particles[i] = new Particle(pos, PVector.random2D());
         }
         
-        toAdd.addAll(Arrays.asList(sparks));
+        toAdd.addAll(Arrays.asList(particles));
+        toRemove.add(this);
     }
 }
 
-class Fuse extends Particle {
-    ArrayList<PVector> history = new ArrayList<PVector>();
-    int historyLength, red, green, blue, alpha;
-    color fuseStrokeC;
+//   Spark(PVector pos) {
+//         size = 5;
+//         opacity = 257;
+//         red = (int) random(256);
+//         green = (int) random(256);
+//         blue = (int) random(256);
+//         applyForce(new PVector(0.01, 0.05));
+//         vel.y -= 1;
+//         strokeC = color(red, green , blue, opacity);
+//     }
 
-    Fuse(float x) {
-        pos.set(x, height + size / 2);
-        applyForce(new PVector(0, 0.015)); // gravity
-        vel.y = random(-4, -3); // launch speed
-        historyLength = (int) random(15, 30);
-        red = (int) random(256);
-        green = (int) random(256);
-        blue = (int) random(256);
-        strokeC = color(red, green, blue);
-    }
+//     void update() {
+//         super.update();
 
-    void update() {
-        history.add(pos.copy());
+//         strokeC = color(red, green , blue, opacity);
 
-        if (history.size() > historyLength) history.remove(0);
-
-        super.update();
-
-        if (vel.y > 0) {
-            toRemove.add(this);
-            explode(30);
-        }
-    }
-
-    void show() {
-        super.show();
-
-        for (int i = history.size(); i > 0; i--) {
-            PVector hPos = history.get(i-1);
-            
-            float alpha = (float) i / history.size() * 255;
-
-            fuseStrokeC = color(red, green, blue, alpha);
-
-            stroke(fuseStrokeC);
-            point(hPos.x, hPos.y);
-        }
-    }
-
-    void explode(int amount) {
-        Particle[] sparks = new Particle[amount];
-
-        for (int i = 0; i < sparks.length; i++) {
-            sparks[i] = new Spark(pos);
-        }
-        
-        toAdd.addAll(Arrays.asList(sparks));
-    }
-}
+//         opacity -= 2;
+//         if (opacity <= 0) toRemove.add(this);
+//     }
 
 // class Fuse2 extends Particle {
 //     float startX, speed, minX, maxX, xCorrection; // xCorrection = amount of repositioning on x-axis for new launch
