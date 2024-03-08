@@ -1,19 +1,22 @@
-class Fuse {
+class Fuse extends ParticleWithTrail {
     int count = 0;
     boolean exploded = false;
 
     Fuse(float x, float y, float angle, int radius) {
-        ParticleWithTrail fuse = new ParticleWithTrail(random(15, 30));
-        fuse.pos.set(x, y);
-        fuse.applyForce(new PVector(0, 0.022)); // gravity
-        fuse.vel = PVector.fromAngle(angle).mult(5); // launch direction + speed
-        particleList.add(fuse);
+         // parameterized constructor
+        trailLength = (int) random(15, 30);
+        trailAlpha = 255;
+        // ParticleWithTrail fuse = new ParticleWithTrail();
+        pos.set(x, y);
+        applyForce(new PVector(0, 0.022)); // gravity
+        vel = PVector.fromAngle(angle).mult(5); // launch direction + speed
     }
 
     void update() {
         super.update();
 
-        if (count > 90 && !exploded) explode(30);
+        // if (count > 90) explode(30);
+        if (count > 90) stop = true;
 
         count++;
     }
@@ -22,16 +25,16 @@ class Fuse {
     //     if (!exploded) super.show();
     // }
 
-    void explode(int amount) {
-        Particle[] particles = new Particle[amount];
+    // void explode(int amount) {
+    //     Particle[] particles = new Particle[amount];
 
-        for (int i = 0; i < particles.length; i++) {
-            particles[i] = new Particle(pos, PVector.random2D());
-        }
+    //     for (int i = 0; i < particles.length; i++) {
+    //         particles[i] = new Particle(pos, PVector.random2D());
+    //     }
         
-        toAdd.addAll(Arrays.asList(particles));
-        toRemove.add(this);
-    }
+    //     toAdd.addAll(Arrays.asList(particles));
+    //     toRemove.add(this);
+    // }
 }
 
 //   Spark(PVector pos) {

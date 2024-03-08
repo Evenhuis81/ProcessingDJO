@@ -108,113 +108,64 @@ class Button {
         // line(x, y + h/2, x + w, y + h/2);
     }
 }
-class Fuse2 extends Particle {
-    ArrayList<PVector> history = new ArrayList<PVector>();
-    boolean exploded = false;
-    int trailLength = (int) random(15, 30);
+class Fuse extends ParticleWithTrail {
     int count = 0;
-    float angle;
+    boolean exploded = false;
 
-    Fuse2(float angle, PVector pos) {
-        this.angle = angle;
-        this.pos.set(pos);
-        applyForce(new PVector(0, 0.022f));
-        vel = PVector.fromAngle(angle).mult(5);
+    Fuse(float x, float y, float angle, int radius) {
+         // parameterized constructor
+        trailLength = (int) random(15, 30);
+        trailAlpha = 255;
+        // ParticleWithTrail fuse = new ParticleWithTrail();
+        pos.set(x, y);
+        applyForce(new PVector(0, 0.022f)); // gravity
+        vel = PVector.fromAngle(angle).mult(5); // launch direction + speed
     }
 
     public void update() {
-        if (!exploded) history.add(pos.copy());
-        
-        if (history.size() > trailLength || exploded) {
-            history.remove(0);
+        super.update();
 
-            if (history.size() == 0) toRemove.add(this);
-        }
-
-        if (count > 90 && !exploded) {
-            exploded = true;
-            explode(30);
-        }
+        // if (count > 90) explode(30);
+        if (count > 90) stop = true;
 
         count++;
-
-        super.update();
     }
 
-    public void show() {
-        super.show();
+    // void show() {
+    //     if (!exploded) super.show();
+    // }
 
-        for (int i = history.size(); i > 0; i--) {
-            PVector hPos = history.get(i-1);
-            
-            float alpha = (float) i / history.size() * 255;
+    // void explode(int amount) {
+    //     Particle[] particles = new Particle[amount];
 
-            stroke(red, green, blue, alpha);
-            point(hPos.x, hPos.y);
-        }
-    }
-
-    public void explode(int amount) {
-        Particle[] particles = new Particle[amount];
-
-        for (int i = 0; i < particles.length; i++) {
-            particles[i] = new Particle(pos);
-        }
+    //     for (int i = 0; i < particles.length; i++) {
+    //         particles[i] = new Particle(pos, PVector.random2D());
+    //     }
         
-        toAdd.addAll(Arrays.asList(particles));
-    }
+    //     toAdd.addAll(Arrays.asList(particles));
+    //     toRemove.add(this);
+    // }
 }
 
-// class Fuse extends Particle {
-//     ArrayList<PVector> history = new ArrayList<PVector>();
-//     int trailLength, red, green, blue, alpha;
-//     color fuseColor;
-
-//     Fuse(float x) {
-//         pos.set(x, height + radius); // middle - bottom
-//         applyForce(new PVector(0, 0.015)); // gravity
-//         vel.y = random(-4, -3); // launch speed
-//         trailLength = (int) random(15, 30); // length of trail
+//   Spark(PVector pos) {
+//         size = 5;
+//         opacity = 257;
+//         red = (int) random(256);
+//         green = (int) random(256);
+//         blue = (int) random(256);
+//         applyForce(new PVector(0.01, 0.05));
+//         vel.y -= 1;
+//         strokeC = color(red, green , blue, opacity);
 //     }
 
 //     void update() {
-//         history.add(pos.copy());
-
-//         if (history.size() > trailLength) history.remove(0);
-
 //         super.update();
 
-//         if (vel.y > 0) {
-//             toRemove.add(this);
-//             explode(30);
-//         }
+//         strokeC = color(red, green , blue, opacity);
+
+//         opacity -= 2;
+//         if (opacity <= 0) toRemove.add(this);
 //     }
-
-//     void show() {
-//         super.show();
-
-//         for (int i = history.size(); i > 0; i--) {
-//             PVector hPos = history.get(i-1);
-            
-//             float alpha = (float) i / history.size() * 255;
-
-//             fuseColor = color(red, green, blue, alpha);
-
-//             stroke(colour.red, colour.green, colour.blue);
-//             point(hPos.x, hPos.y);
-//         }
-//     }
-
-//     void explode(int amount) {
-//         Particle[] sparks = new Particle[amount];
-
-//         for (int i = 0; i < sparks.length; i++) {
-//             sparks[i] = new Spark(pos);
-//         }
-        
-//         toAdd.addAll(Arrays.asList(sparks));
-//     }
-// }
 
 // class Fuse2 extends Particle {
 //     float startX, speed, minX, maxX, xCorrection; // xCorrection = amount of repositioning on x-axis for new launch
@@ -273,12 +224,13 @@ public void mouseReleased() {
 float angleAdjust = 0.05f;
 float angleFactor = 1.25f; // 225°, range = 1.25 - 1.75 * PI (225 - 315°)
 float angle = (float) Math.PI * angleFactor;
+int size = 8;
 
 class LaunchPad {
     LaunchPad() {}
 
     public void ignite() {
-        particleList.add(new Fuse2(angle, new PVector(width/2, height + 4)));
+        toAdd.add(new Fuse(width/2, height + size / 2, angle, size)); // x, y, angle, radius
 
         angleFactor += angleAdjust;
         angle = (float) Math.PI * angleFactor;
@@ -287,21 +239,17 @@ class LaunchPad {
     }
 }
 class Particle {
-    PVector pos = new PVector(); // no values = { x: 0, y: 0 }
+    PVector pos = new PVector(); // no params = { x: 0, y: 0 }
     PVector vel = new PVector();
     PVector acc = new PVector();
     int red = (int) random(256);
     int green = (int) random(256);
     int blue = (int) random(256);
     int alpha = 255;
-    int colour = color(red, green, blue, alpha);
+    int strokeColor = color(red, green, blue, alpha);
     int radius = 4;
 
     Particle() {} // default constructor
-
-    Particle(PVector pos) { // parameterized constructor
-        this.pos.set(pos);
-    }
 
     public void applyForce(PVector force) {
         // F = M * A (force = mass * acceleration), mass ommited
@@ -318,9 +266,40 @@ class Particle {
     }
 
     public void show() {
-        stroke(colour);
+        stroke(strokeColor);
         strokeWeight(radius * 2);
         point(pos.x, pos.y);
+    }
+}
+
+class ParticleWithTrail extends Particle {
+    ArrayList<PVector> trail = new ArrayList<PVector>();
+    int count, trailLength, trailAlpha;
+    boolean stop = false;
+
+    ParticleWithTrail() {}
+
+    public void update() {
+        if (!stop) trail.add(pos.copy());
+
+        super.update();
+
+        if (trail.size() > trailLength || stop) trail.remove(0);
+
+        if (stop && trail.size() == 0)  toRemove.add(this);
+    }
+
+    public void show() { 
+        super.show();
+
+        for (int i = trail.size(); i > 0; i--) {
+            PVector hPos = trail.get(i-1);
+            
+            trailAlpha = (float) i / trail.size() * 255;
+
+            stroke(red, green, blue, alpha);
+            point(hPos.x, hPos.y);
+        }
     }
 }
 class Statistics {
