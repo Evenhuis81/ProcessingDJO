@@ -6,7 +6,6 @@ class Particle {
     int green = (int) random(256);
     int blue = (int) random(256);
     int alpha = 255;
-    int strokeColor = color(red, green, blue, alpha);
     int radius = 4;
 
     Particle() {} // default constructor
@@ -26,7 +25,7 @@ class Particle {
     }
 
     void show() {
-        stroke(strokeColor);
+        stroke(red, green, blue, alpha);
         strokeWeight(radius * 2);
         point(pos.x, pos.y);
     }
@@ -34,13 +33,21 @@ class Particle {
 
 class Tail extends Particle {
     ArrayList<PVector> tail = new ArrayList<PVector>();
-    float tailAlpha, step;
-    int length;
+    float tailAlpha = 255;
+    int maxAlpha = 255;
+    int length = 0;
 
-    Tail() {}
+    Tail(PVector pos, PVector vel, int length, int radius) {
+        this.pos.set(pos);
+        this.vel.set(vel);
+        this.length = length;
+        this.radius = radius;
+    }
 
     void stop() {
-        step = 1 / tail.size() + 1
+        if (tail.size() == 0) return;
+
+        alpha = 0;
     }
 
     void update() {
@@ -51,18 +58,44 @@ class Tail extends Particle {
         if (tail.size() > length) tail.remove(0);
     }
 
-    void show() { 
+    void fadeOut() {
+        if (tail.size() == 0) return;
+
+        tail.remove(0);
+    }
+
+    void show() {
         super.show();
 
         for (int i = tail.size(); i > 0; i--) {
             PVector hPos = tail.get(i-1);
             
-            tailAlpha = (float) i / (tail.size() + 1) * 255; // + 1 = include particle
-
-            println(tailAlpha);
+            tailAlpha = (float) i / (tail.size() + 1) * maxAlpha; // + 1 = include particle
 
             stroke(red, green, blue, tailAlpha);
             point(hPos.x, hPos.y);
         }
+    }
+}
+
+class TailExploded extends Tail {
+    float step;
+
+    TailExploded(PVector pos, PVector vel, int length, int radius, int step) {
+        super(pos, vel, length, radius);
+
+        this.step = step;
+
+        println(step); 
+    }
+
+    void update() {
+        super.update();
+
+        maxAlpha -= step;
+
+        alpha = maxAlpha;
+
+        if (maxAlpha < 1) toRemove.add(this);
     }
 }

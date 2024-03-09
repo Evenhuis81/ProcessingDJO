@@ -110,43 +110,42 @@ class Button {
 }
 class Fuse extends Tail {
     int count = 0;
+    int explodeCount = 90;
     boolean exploded = false;
 
     Fuse(float x, float y, float angle, int radius) { // parameterized constructor
-        // length = (int) random(15, 30);
-        length = 3;
-        tailAlpha = 255;
-        pos.set(x, y);
+        super(new PVector(x, y), PVector.fromAngle(angle).mult(5), (int) random(15, 30), radius); // pos, vel and tail length
         applyForce(new PVector(0, 0.022f)); // gravity
-        vel = PVector.fromAngle(angle).mult(5); // launch direction + speed
     }
 
     public void update() {
         if (!exploded) super.update();
 
-        // if (count > 90) explode(30);
-        if (count > 90 && !exploded) {
-            stop = true;
-            toRemove.add(this);
+        if (count > explodeCount && !exploded) {
+            exploded = true;
+            explode(15);
+            stop();
+        }
+
+        if (exploded) {
+            fadeOut();
+
+            if (tail.size() == 0) toRemove.add(this);
         }
 
         count++;
     }
 
-    // void show() {
-    //     if (!exploded) super.show();
-    // }
+    public void explode(int amount) {
+        Particle[] particles = new Tail[amount];
 
-    // void explode(int amount) {
-    //     Particle[] particles = new Particle[amount];
-
-    //     for (int i = 0; i < particles.length; i++) {
-    //         particles[i] = new Particle(pos, PVector.random2D());
-    //     }
+        for (int i = 0; i < particles.length; i++) {
+            particles[i] = new TailExploded(pos, PVector.random2D().mult(2), (int) random(45, 90), 3, (int) random(2, 9));
+            particles[i].applyForce(new PVector(0, 0.022f));
+        }
         
-    //     toAdd.addAll(Arrays.asList(particles));
-    //     toRemove.add(this);
-    // }
+        toAdd.addAll(Arrays.asList(particles));
+    }
 }
 
 // class Fuse2 extends Particle {
@@ -180,16 +179,6 @@ class Fuse extends Tail {
 //             explode();
 //         }
 //     }
-
-//     void explode() {
-//         Particle[] sparks = new Particle[50];
-
-//         for (int i = 0; i < sparks.length; i++) {
-//             sparks[i] = new Spark(pos);
-//         }
-        
-//         toAdd.addAll(Arrays.asList(sparks));
-//     }
 // }
 public void mousePressed() {
     // if (startButton.inside()) startButton.press();
@@ -206,7 +195,7 @@ public void mouseReleased() {
 float angleAdjust = 0.05f;
 float angleFactor = 1.25f; // 225°, range = 1.25 - 1.75 * PI (225 - 315°)
 float angle = (float) Math.PI * angleFactor;
-int size = 8;
+int size = 5;
 
 class LaunchPad {
     LaunchPad() {}
@@ -228,7 +217,6 @@ class Particle {
     int green = (int) random(256);
     int blue = (int) random(256);
     int alpha = 255;
-    int strokeColor = color(red, green, blue, alpha);
     int radius = 4;
 
     Particle() {} // default constructor
@@ -248,7 +236,7 @@ class Particle {
     }
 
     public void show() {
-        stroke(strokeColor);
+        stroke(red, green, blue, alpha);
         strokeWeight(radius * 2);
         point(pos.x, pos.y);
     }
@@ -256,15 +244,21 @@ class Particle {
 
 class Tail extends Particle {
     ArrayList<PVector> tail = new ArrayList<PVector>();
-    int count, length;
-    float tailAlpha;
-    boolean stop = false;
+    float tailAlpha = 255;
+    int maxAlpha = 255;
+    int length = 0;
 
-    Tail() {}
+    Tail(PVector pos, PVector vel, int length, int radius) {
+        this.pos.set(pos);
+        this.vel.set(vel);
+        this.length = length;
+        this.radius = radius;
+    }
 
-    public void halt() {
-        length = 0;
-        stop = true;
+    public void stop() {
+        if (tail.size() == 0) return;
+
+        alpha = 0;
     }
 
     public void update() {
@@ -275,19 +269,45 @@ class Tail extends Particle {
         if (tail.size() > length) tail.remove(0);
     }
 
-    public void show() { 
+    public void fadeOut() {
+        if (tail.size() == 0) return;
+
+        tail.remove(0);
+    }
+
+    public void show() {
         super.show();
 
         for (int i = tail.size(); i > 0; i--) {
             PVector hPos = tail.get(i-1);
             
-            tailAlpha = (float) i / (tail.size() + 1) * 255; // + 1 = include particle
-
-            println(tailAlpha);
+            tailAlpha = (float) i / (tail.size() + 1) * maxAlpha; // + 1 = include particle
 
             stroke(red, green, blue, tailAlpha);
             point(hPos.x, hPos.y);
         }
+    }
+}
+
+class TailExploded extends Tail {
+    float step;
+
+    TailExploded(PVector pos, PVector vel, int length, int radius, int step) {
+        super(pos, vel, length, radius);
+
+        this.step = step;
+
+        println(step); 
+    }
+
+    public void update() {
+        super.update();
+
+        maxAlpha -= step;
+
+        alpha = maxAlpha;
+
+        if (maxAlpha < 1) toRemove.add(this);
     }
 }
 class Statistics {

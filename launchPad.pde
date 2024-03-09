@@ -1,7 +1,7 @@
 float angleAdjust = 0.05;
 float angleFactor = 1.25; // 225°, range = 1.25 - 1.75 * PI (225 - 315°)
 float angle = (float) Math.PI * angleFactor;
-int size = 8;
+int size = 5;
 
 class LaunchPad {
     LaunchPad() {}
