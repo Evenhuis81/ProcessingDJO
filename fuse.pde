@@ -1,31 +1,41 @@
-class Fuse extends ParticleWithTrail {
+class Fuse extends Tail {
     int count = 0;
     boolean exploded = false;
 
-    Fuse(float x, float y, float angle, int radius) {
-         // parameterized constructor
-        trailLength = (int) random(15, 30);
-        trailAlpha = 255;
-        // ParticleWithTrail fuse = new ParticleWithTrail();
+    Fuse(float x, float y, float angle, int radius) { // parameterized constructor
+        // length = (int) random(15, 30);
+        length = 3;
+        tailAlpha = 255;
         pos.set(x, y);
         applyForce(new PVector(0, 0.022)); // gravity
         vel = PVector.fromAngle(angle).mult(5); // launch direction + speed
     }
 
     void update() {
-        super.update();
+        if (!exploded) super.update();
 
         // if (count > 90) explode(30);
-        if (count > 90) stop = true;
+        if (count > 90 && !exploded) {
+            exploded = true;
+            explode(15);
+            stop();
+            // toRemove.add(this);
+        }
+
+        if (exploded) {
+            //
+        }
 
         count++;
     }
 
-    // void show() {
-    //     if (!exploded) super.show();
-    // }
+    void show() {
+        if (!exploded) super.show();
 
-    // void explode(int amount) {
+        //
+    }
+
+    void explode(int amount) {
     //     Particle[] particles = new Particle[amount];
 
     //     for (int i = 0; i < particles.length; i++) {
@@ -34,28 +44,8 @@ class Fuse extends ParticleWithTrail {
         
     //     toAdd.addAll(Arrays.asList(particles));
     //     toRemove.add(this);
-    // }
+    }
 }
-
-//   Spark(PVector pos) {
-//         size = 5;
-//         opacity = 257;
-//         red = (int) random(256);
-//         green = (int) random(256);
-//         blue = (int) random(256);
-//         applyForce(new PVector(0.01, 0.05));
-//         vel.y -= 1;
-//         strokeC = color(red, green , blue, opacity);
-//     }
-
-//     void update() {
-//         super.update();
-
-//         strokeC = color(red, green , blue, opacity);
-
-//         opacity -= 2;
-//         if (opacity <= 0) toRemove.add(this);
-//     }
 
 // class Fuse2 extends Particle {
 //     float startX, speed, minX, maxX, xCorrection; // xCorrection = amount of repositioning on x-axis for new launch

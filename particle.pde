@@ -32,32 +32,36 @@ class Particle {
     }
 }
 
-class ParticleWithTrail extends Particle {
-    ArrayList<PVector> trail = new ArrayList<PVector>();
-    int count, trailLength, trailAlpha;
-    boolean stop = false;
+class Tail extends Particle {
+    ArrayList<PVector> tail = new ArrayList<PVector>();
+    float tailAlpha, step;
+    int length;
 
-    ParticleWithTrail() {}
+    Tail() {}
+
+    void stop() {
+        step = 1 / tail.size() + 1
+    }
 
     void update() {
-        if (!stop) trail.add(pos.copy());
+        tail.add(pos.copy());
 
         super.update();
 
-        if (trail.size() > trailLength || stop) trail.remove(0);
-
-        if (stop && trail.size() == 0)  toRemove.add(this);
+        if (tail.size() > length) tail.remove(0);
     }
 
     void show() { 
         super.show();
 
-        for (int i = trail.size(); i > 0; i--) {
-            PVector hPos = trail.get(i-1);
+        for (int i = tail.size(); i > 0; i--) {
+            PVector hPos = tail.get(i-1);
             
-            trailAlpha = (float) i / trail.size() * 255;
+            tailAlpha = (float) i / (tail.size() + 1) * 255; // + 1 = include particle
 
-            stroke(red, green, blue, alpha);
+            println(tailAlpha);
+
+            stroke(red, green, blue, tailAlpha);
             point(hPos.x, hPos.y);
         }
     }
