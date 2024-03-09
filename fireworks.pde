@@ -5,11 +5,12 @@ ArrayList<Particle> toRemove = new ArrayList<Particle>();
 ArrayList<Particle> toAdd = new ArrayList<Particle>();
 Statistics statistics = new Statistics();
 LaunchPad launchPad = new LaunchPad();
-// Button startButton;
+Sequencer seq = new Sequencer();
+Button startButton;
 
 void setup() {
     size(800, 600);
-    // startButton = new Button("start", width-120, 20);
+    startButton = new Button("start", width-120, 20);
 }
 
 void draw() {
@@ -20,13 +21,15 @@ void draw() {
         p.show();
     }
 
+    seq.update();
+
     particleList.removeAll(toRemove);
     particleList.addAll(toAdd);
 
     toRemove.clear();
     toAdd.clear();
 
-    // startButton.show();
+    startButton.show();
 
     statistics.update();
     statistics.show();

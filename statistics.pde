@@ -3,6 +3,7 @@ class Statistics {
 
     Statistics() {
         addText(0, "Particles length: ");
+        // addText(1, "Milliseconds: ");
         // addText(1, "xCor: ");
         // addText(2, "startX: ");
         // addText(3, "minX: ");
@@ -19,7 +20,7 @@ class Statistics {
 
     void update() {
         setText(0, "Particles length: " + particleList.size());
-        // setText(1, "xCor: " + xCorrection);
+        // setText(1, "Milliseconds: " + millis());
         // setText(2, "startX: " + startX);
         // setText(3, "minX: " + minX);
         // setText(4, "maxX: " + maxX);

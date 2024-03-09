@@ -7,6 +7,10 @@ class LaunchPad {
     LaunchPad() {}
 
     void ignite() {
+        seq.start();
+    }
+
+    void igniteOne() {
         toAdd.add(new Fuse(width/2, height + size / 2, angle, size)); // x, y, angle, radius
 
         angleFactor += angleAdjust;

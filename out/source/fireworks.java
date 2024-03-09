@@ -24,11 +24,12 @@ ArrayList<Particle> toRemove = new ArrayList<Particle>();
 ArrayList<Particle> toAdd = new ArrayList<Particle>();
 Statistics statistics = new Statistics();
 LaunchPad launchPad = new LaunchPad();
-// Button startButton;
+Sequencer seq = new Sequencer();
+Button startButton;
 
 public void setup() {
     /* size commented out by preprocessor */;
-    // startButton = new Button("start", width-120, 20);
+    startButton = new Button("start", width-120, 20);
 }
 
 public void draw() {
@@ -39,13 +40,15 @@ public void draw() {
         p.show();
     }
 
+    seq.update();
+
     particleList.removeAll(toRemove);
     particleList.addAll(toAdd);
 
     toRemove.clear();
     toAdd.clear();
 
-    // startButton.show();
+    startButton.show();
 
     statistics.update();
     statistics.show();
@@ -147,50 +150,18 @@ class Fuse extends Tail {
         toAdd.addAll(Arrays.asList(particles));
     }
 }
-
-// class Fuse2 extends Particle {
-//     float startX, speed, minX, maxX, xCorrection; // xCorrection = amount of repositioning on x-axis for new launch
-//     // boolean added = false;
-
-//     Fuse1(float x, float y, float minX, float maxX, float xCor) {
-//         pos.set(x, y);
-//         this.minX = minX;
-//         this.maxX = maxX;
-//         startX = x;
-//         xCorrection = xCor;
-
-//         // reposition when out of range and reverse xCorrection
-//         if (startX < minX || startX > maxX ) {
-//             xCorrection *= -1;
-//             startX += xCorrection * 2;
-//             pos.x = startX;
-//         }
-
-//         applyForce(new PVector(0, 0.3));
-//         vel.y = random(-20, -16);
-//     }
-
-//     void update() {
-//         super.update();
-
-//         if (vel.y > 0) {
-//             toRemove.add(this);
-//             toAdd.add(new Fuse1(startX + xCorrection, height + 5, minX, maxX, xCorrection));
-//             explode();
-//         }
-//     }
-// }
 public void mousePressed() {
-    // if (startButton.inside()) startButton.press();
+    if (startButton.inside()) startButton.press();
 }
 
 public void mouseReleased() {
-    launchPad.ignite();
-    // if (startButton.pressed) {
-    //     if (startButton.inside()) launchPad.ignite();
+    if (startButton.pressed) {
+        if (startButton.inside()) {
+            launchPad.ignite();
+        }
 
-    //     startButton.release();
-    // }
+        startButton.release();
+    }
 }
 float angleAdjust = 0.05f;
 float angleFactor = 1.25f; // 225°, range = 1.25 - 1.75 * PI (225 - 315°)
@@ -201,6 +172,10 @@ class LaunchPad {
     LaunchPad() {}
 
     public void ignite() {
+        seq.start();
+    }
+
+    public void igniteOne() {
         toAdd.add(new Fuse(width/2, height + size / 2, angle, size)); // x, y, angle, radius
 
         angleFactor += angleAdjust;
@@ -310,11 +285,32 @@ class TailExploded extends Tail {
         if (maxAlpha < 1) toRemove.add(this);
     }
 }
+class Sequencer {
+    boolean started = false;
+    float timePassed = 0;
+    float currentMillis = 0;
+
+    Sequencer() {}
+
+    public void start() {
+        currentMillis = millis();
+        statistics.addText(1, "Time passed: " + millis());
+        started = true;
+    }
+
+    public void update() {
+        if (started) {
+            timePassed = millis() - currentMillis;
+            statistics.setText(1, "Time passed: " + timePassed);
+        }
+    }
+}
 class Statistics {
     ArrayList<String> stats = new ArrayList<String>();
 
     Statistics() {
         addText(0, "Particles length: ");
+        // addText(1, "Milliseconds: ");
         // addText(1, "xCor: ");
         // addText(2, "startX: ");
         // addText(3, "minX: ");
@@ -331,7 +327,7 @@ class Statistics {
 
     public void update() {
         setText(0, "Particles length: " + particleList.size());
-        // setText(1, "xCor: " + xCorrection);
+        // setText(1, "Milliseconds: " + millis());
         // setText(2, "startX: " + startX);
         // setText(3, "minX: " + minX);
         // setText(4, "maxX: " + maxX);
