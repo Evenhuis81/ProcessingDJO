@@ -1,32 +1,45 @@
 class Sequencer {
+    int[] thresholds;
+    SequenceMethod[] methods;
+
     boolean started = false;
     boolean maxTime = false;
     float timePassed = 0;
     float currentMillis = 0;
     int timeThreshold = 1000;
     int timeGap = 200;
+    int seqIndex = 0;
 
-
+    // statistics.addText(1, "Time passed: " + millis());
+    // statistics.setText(1, "Time passed: " + timePassed);
     Sequencer() {}
 
     void start() {
         currentMillis = millis();
-        statistics.addText(1, "Time passed: " + millis());
         started = true;
     }
 
+    void setSequence(int[] tholds, SequenceMethod[] mthods) {
+        thresholds = tholds;
+        methods = mthods;
+    }
+
     void update() {
-        if (started) {
-            timePassed = millis() - currentMillis;
-            statistics.setText(1, "Time passed: " + timePassed);
-        }
+        if (!started) return;
 
-        if (timePassed > timeThreshold && !maxTime) {
-            mortar.igniteOne();
+        timePassed = millis() - currentMillis;
 
-            timeThreshold += timeGap;
+        if (timePassed > thresholds[seqIndex]) {
+            // mortar.sequenceOne();
+            methods[seqIndex].method();
 
-            if (timeThreshold > 3000) maxTime = true;
+            seqIndex++;
+
+            if (seqIndex > thresholds.length - 1) started = false;
+
+        //     timeThreshold += timeGap;
+
+            // if (timeThreshold > 2000) started = false;
         }
 
         // 1. left -> right

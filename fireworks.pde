@@ -5,8 +5,8 @@ ArrayList<Particle> toRemove = new ArrayList<Particle>();
 ArrayList<Particle> toAdd = new ArrayList<Particle>();
 Statistics statistics = new Statistics();
 Mortar mortar = new Mortar();
-Sequencer seq = new Sequencer();
 Button startButton;
+Sequencer seq = new Sequencer();
 
 void setup() {
     size(800, 600);
@@ -21,8 +21,6 @@ void draw() {
         p.show();
     }
 
-    seq.update();
-
     particleList.removeAll(toRemove);
     particleList.addAll(toAdd);
 
@@ -31,6 +29,9 @@ void draw() {
 
     startButton.show();
 
+    seq.update();
+
     statistics.update();
     statistics.show();
+
 }
