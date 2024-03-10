@@ -4,7 +4,7 @@ ArrayList<Particle> particleList = new ArrayList<Particle>();
 ArrayList<Particle> toRemove = new ArrayList<Particle>();
 ArrayList<Particle> toAdd = new ArrayList<Particle>();
 Statistics statistics = new Statistics();
-LaunchPad launchPad = new LaunchPad();
+Mortar mortar = new Mortar();
 Sequencer seq = new Sequencer();
 Button startButton;
 

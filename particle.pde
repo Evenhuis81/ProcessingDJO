@@ -1,4 +1,4 @@
-class Particle {
+class Particle { // Aerial Projectile
     PVector pos = new PVector(); // no params = { x: 0, y: 0 }
     PVector vel = new PVector();
     PVector acc = new PVector();

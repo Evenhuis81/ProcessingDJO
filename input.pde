@@ -5,7 +5,7 @@ void mousePressed() {
 void mouseReleased() {
     if (startButton.pressed) {
         if (startButton.inside()) {
-            launchPad.ignite();
+            mortar.ignite();
         }
 
         startButton.release();
