@@ -37,11 +37,22 @@ class Tail extends Particle {
     int maxAlpha = 255;
     int length = 0;
 
+    Tail() {}
+
     Tail(PVector pos, PVector vel, int length, int radius) {
         this.pos.set(pos);
         this.vel.set(vel);
         this.length = length;
         this.radius = radius;
+    }
+
+    Tail(PVector pos, PVector vel, int length, int radius, color col) {
+        this.pos.set(pos);
+        this.vel.set(vel);
+        this.length = length;
+        this.radius = radius;
+
+        println(col.red());
     }
 
     void stop() {

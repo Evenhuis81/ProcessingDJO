@@ -8,12 +8,13 @@ interface SequenceMethod {
 }
 
 class Sequence {
-    int[] thresholds = { 1000, 200, 200, 200 };
+    // int[] thresholds = { 1000, 200, 200, 200 };
+    int[] thresholds = { 1500 };
     SequenceMethod[] methods = new SequenceMethod[] {
         new SequenceMethod() { void method() { mortar.sequenceOne(); } },
-        new SequenceMethod() { void method() { mortar.sequenceOne(); } },
-        new SequenceMethod() { void method() { mortar.sequenceOne(); } },
-        new SequenceMethod() { void method() { mortar.sequenceOne(); } },
+        // new SequenceMethod() { void method() { mortar.sequenceOne(); } },
+        // new SequenceMethod() { void method() { mortar.sequenceOne(); } },
+        // new SequenceMethod() { void method() { mortar.sequenceOne(); } },
     };
 
     Sequence() {
@@ -44,24 +45,37 @@ class Sequence {
 // Sequence sequence = new Sequence();
 
 class Mortar {
-    int[] thresholds = { 1000, 2000, 3000, 4000 };
+    // int[] thresholds = { 1000, 2000, 3000, 4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800 };\
+    int[] thresholds = { 1500 };
     SequenceMethod[] methods = new SequenceMethod[] {
         new SequenceMethod() { void method() { sequenceOne(); } },
-        new SequenceMethod() { void method() { sequenceOne(); } },
-        new SequenceMethod() { void method() { sequenceOne(); } },
-        new SequenceMethod() { void method() { sequenceOne(); } },
+        // new SequenceMethod() { void method() { sequenceOne(); } },
+        // new SequenceMethod() { void method() { sequenceOne(); } },
+        // new SequenceMethod() { void method() { sequenceOne(); } },
+        // new SequenceMethod() { void method() { sequenceOne(); } },
+        // new SequenceMethod() { void method() { sequenceOne(); } },
+        // new SequenceMethod() { void method() { sequenceOne(); } },
+        // new SequenceMethod() { void method() { sequenceOne(); } },
+        // new SequenceMethod() { void method() { sequenceOne(); } },
+        // new SequenceMethod() { void method() { sequenceOne(); } },
+        // new SequenceMethod() { void method() { sequenceOne(); } },
+        // new SequenceMethod() { void method() { sequenceOne(); } },
     };
 
     Mortar() {}
 
     void sequenceOne() {
-        toAdd.add(new MortarShell(new PVector(width/2, height + size / 2), angle, size)); // x, y, angle, radius
-
-        angleFactor += angleAdjust;
-        angle = (float) Math.PI * angleFactor;
-
-        if (angleFactor > 1.70 || angleFactor < 1.30) angleAdjust *= -1;
+        toAdd.add(new MortarShell(width/2, color(255, 0, 0))); // x, color
     }
+
+    // void sequenceTwo() {
+    //     toAdd.add(new MortarShell(new PVector(width/2, height + size / 2), angle, size)); // x, y, angle, radius
+
+    //     angleFactor += angleAdjust;
+    //     angle = (float) Math.PI * angleFactor;
+
+    //     if (angleFactor > 1.70 || angleFactor < 1.30) angleAdjust *= -1;
+    // }
 
     void ignite() {
         seq.setSequence(thresholds, methods);

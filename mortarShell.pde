@@ -1,10 +1,27 @@
-class MortarShell extends Tail {
-int count = 0;
+class MortarShell extends Tail { // Flare -> (https://fireworks1.com/Fireworks-Dictionary.html)
+    color colour = color(255, 0, 0, 255);
+    
+    MortarShell(float x, color col) {
+        super(new PVector(x, height + 10), new PVector(0, -3), 100, 20, col); // pos, vel, tail length, size, color
+        applyForce(new PVector(0, 0.01));
+    }
+
+    // void update() {
+    //     //
+    // }
+
+    // void show() {
+    //     //
+    // }
+}
+
+class MortarShell2 extends Tail {
+    int count = 0;
     int explodeCount = 90;
     boolean exploded = false;
 
-    MortarShell(PVector pos, float angle, int radius) { // parameterized constructor
-        super(pos, PVector.fromAngle(angle).mult(5), (int) random(15, 30), radius); // pos, vel and tail length
+    MortarShell2(PVector pos, float angle, int radius) { // parameterized constructor
+        super(pos, PVector.fromAngle(angle).mult(5), (int) random(15, 30), radius); // pos, vel, tail length, size
         applyForce(new PVector(0, 0.022)); // gravity
     }
 
